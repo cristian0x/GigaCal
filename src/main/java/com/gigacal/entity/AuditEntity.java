@@ -9,15 +9,13 @@ import java.time.LocalDateTime;
 @Data
 public class AuditEntity {
 
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createDate;
+
+    @Column
+    private LocalDateTime updateDate;
 
     @Column(updatable = false)
-    private LocalDateTime createdBy;
+    private LocalDateTime removeDate;
 
-    @Column(updatable = false)
-    private LocalDateTime updatedAt;
-
-    @Column(updatable = false)
-    private LocalDateTime updatedBy;
 }

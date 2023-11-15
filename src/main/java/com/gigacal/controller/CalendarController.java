@@ -27,6 +27,6 @@ public class CalendarController {
     @PostMapping
     public ResponseEntity<?> createCalendar(@RequestBody CalendarEntity calendarEntity) {
         iCalendarService.createCalendar(calendarEntity);
-        return ResponseEntity.status(HttpStatus.OK).body("Calendar created.");
+        return ResponseEntity.status(HttpStatus.OK).body("Calendar created successfully.");
     }
 }
