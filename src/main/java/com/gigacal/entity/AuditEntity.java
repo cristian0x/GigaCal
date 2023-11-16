@@ -17,4 +17,5 @@ public class AuditEntity {
 
     @Column(updatable = false)
     private LocalDateTime removeDate;
+
 }
