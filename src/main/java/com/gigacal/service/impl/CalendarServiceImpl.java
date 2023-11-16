@@ -6,6 +6,7 @@ import com.gigacal.service.ICalendarService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,6 +22,7 @@ public class CalendarServiceImpl implements ICalendarService {
 
     @Override
     public void createCalendar(CalendarEntity calendarEntity) {
+        calendarEntity.setCreateDate(LocalDateTime.now());
         calendarRepository.save(calendarEntity);
     }
 }
