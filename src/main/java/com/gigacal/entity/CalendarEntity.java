@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "calendars")
+@Table(name = "CALENDARS")
 @Data
 public class CalendarEntity extends AuditEntity {
 
