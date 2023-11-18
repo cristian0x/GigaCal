@@ -13,6 +13,7 @@ public class SettingEntity extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "setting_id")
     private Long id;
 
     private Long userId;

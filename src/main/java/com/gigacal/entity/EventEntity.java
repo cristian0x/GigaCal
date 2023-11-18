@@ -15,6 +15,7 @@ public class EventEntity extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "event_id")
     private Long id;
 
     private Long calendarId;
