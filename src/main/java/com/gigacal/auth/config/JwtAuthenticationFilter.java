@@ -2,6 +2,7 @@ package com.gigacal.auth.config;
 
 import com.gigacal.entity.TokenEntity;
 import com.gigacal.entity.UserEntity;
+import com.gigacal.enums.Role;
 import com.gigacal.jwt.JwtService;
 import com.gigacal.service.impl.TokenServiceImpl;
 import com.gigacal.service.impl.UserServiceImpl;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
@@ -59,12 +62,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String email = this.jwtService.extractEmail(jwt);
 
         if (nonNull(email) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            final UserEntity user = this.userService.getUserByEmail(email);
+            final UserDetails user = this.userService.getUserByEmail(email);
             final TokenEntity token = this.tokenService.findByToken(jwt);
 
             if (this.jwtService.isTokenValid(user, jwt) && !token.isExpired() && !token.isRevoked()) {
                 final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user,
-                        null, emptyList());
+                        null, user.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);

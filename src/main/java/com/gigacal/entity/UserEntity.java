@@ -1,9 +1,7 @@
 package com.gigacal.entity;
-
+;
 import com.gigacal.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,13 +21,8 @@ public class UserEntity extends AuditEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Email
     private String email;
-
-    @NotBlank
     private String username;
-
-    @NotBlank
     private String password;
 
     @OneToMany(mappedBy = "user")

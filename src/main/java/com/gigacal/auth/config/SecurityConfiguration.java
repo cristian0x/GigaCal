@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/auth/**")
                                 .permitAll()
-                                .requestMatchers("/**").hasAnyRole(Role.USER.name())
+                                .requestMatchers("/**").hasAuthority(Role.USER.getPermission())
                                 .anyRequest()
                                 .authenticated()
                 )
