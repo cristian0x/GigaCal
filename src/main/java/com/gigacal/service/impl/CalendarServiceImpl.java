@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CalendarServiceImpl implements ICalendarService {
 
-    private CalendarRepository calendarRepository;
+    private final CalendarRepository calendarRepository;
 
     @Override
     public List<CalendarEntity> findAll() {
@@ -21,7 +21,7 @@ public class CalendarServiceImpl implements ICalendarService {
     }
 
     @Override
-    public void createCalendar(CalendarEntity calendarEntity) {
+    public void createCalendar(final CalendarEntity calendarEntity) {
         calendarEntity.setCreateDate(LocalDateTime.now());
         calendarRepository.save(calendarEntity);
     }

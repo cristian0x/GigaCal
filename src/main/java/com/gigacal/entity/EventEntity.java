@@ -1,10 +1,6 @@
 package com.gigacal.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,7 +9,7 @@ import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "EVENTS")
+@Table(name = "events")
 @Data
 public class EventEntity extends AuditEntity {
 
