@@ -1,7 +1,7 @@
 package com.gigacal.controller;
 
 import com.gigacal.entity.CalendarEntity;
-import com.gigacal.service.ICalendarService;
+import com.gigacal.service.impl.CalendarServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CalendarController {
 
-    private ICalendarService iCalendarService;
+    private final CalendarServiceImpl calendarService;
 
     @GetMapping
     public ResponseEntity<?> getCalendar() {
-        return ResponseEntity.status(HttpStatus.OK).body(iCalendarService.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(calendarService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<?> createCalendar(@RequestBody CalendarEntity calendarEntity) {
-        iCalendarService.createCalendar(calendarEntity);
+    public ResponseEntity<?> createCalendar(@RequestBody final CalendarEntity calendarEntity) {
+        calendarService.createCalendar(calendarEntity);
         return ResponseEntity.status(HttpStatus.OK).body("Calendar created successfully.");
     }
 }
