@@ -1,9 +1,8 @@
 package com.gigacal.entity;
-;
+
 import com.gigacal.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

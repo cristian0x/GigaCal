@@ -1,4 +1,4 @@
-package com.gigacal.mapper;
+package com.gigacal.mappers;
 
 import com.gigacal.dto.RegisterRequestDTO;
 import com.gigacal.entity.UserEntity;

@@ -12,7 +12,6 @@ public class CalendarEntity extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "calendar_id")
     private Long id;
 
     private Long userId;

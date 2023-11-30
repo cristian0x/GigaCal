@@ -6,6 +6,7 @@ import com.gigacal.service.IUserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,10 @@ public class UserServiceImpl implements IUserService {
     public Optional<UserEntity> getOptionalUserByEmail(final String email) {
         LOGGER.info("Getting a optional user with email={}", email);
         return this.userRepository.getUserEntityByEmail(email);
+    }
+
+    @Override
+    public UserEntity getUserFromAuthentication(final Authentication authentication) {
+        return this.getUserByEmail(authentication.getName());
     }
 }
