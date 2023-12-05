@@ -36,6 +36,4 @@ public class EventEntity extends AuditEntity {
     private LocalTime time;
 
     private int duration;
-
-
 }
