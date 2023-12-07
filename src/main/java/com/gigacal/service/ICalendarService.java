@@ -13,4 +13,10 @@ public interface ICalendarService {
     CalendarEntity findCalendarById(Long calendarId);
 
     List<CalendarEntity> findCalendarsByUserId(Long userId);
+
+    void deleteCalendar(Long calendarId);
+
+    List<CalendarEntity> getCalendarsByExactColumn(String column, String parameter);
+
+    void updateCalendar(Long calendarId, CalendarEntity calendar);
 }

@@ -45,6 +45,7 @@ public class CalendarServiceImpl implements ICalendarService {
                 new NoResultException("calendars for user id " + userId + " not found"));
     }
 
+    @Override
     public List<CalendarEntity> getCalendarsByExactColumn(String column, String parameter) {
         switch (column) {
             case "name":
@@ -54,6 +55,7 @@ public class CalendarServiceImpl implements ICalendarService {
         }
     }
 
+    @Override
     public void deleteCalendar(Long calendarId) {
         if (!calendarRepository.existsById(calendarId)) {
             throw new NoResultException("calendar with id " + calendarId + " not found");
@@ -61,6 +63,7 @@ public class CalendarServiceImpl implements ICalendarService {
         calendarRepository.deleteById(calendarId);
     }
 
+    @Override
     @Transactional
     public void updateCalendar(Long calendarId, CalendarEntity calendar) {
         CalendarEntity calendarToUpdate = calendarRepository.findById(calendarId).orElseThrow(() ->
@@ -78,5 +81,6 @@ public class CalendarServiceImpl implements ICalendarService {
         else {
             throw new CalendarException.IncorrectDataProvided();
         }
+        calendarToUpdate.setUpdateDate(LocalDateTime.now());
     }
 }
