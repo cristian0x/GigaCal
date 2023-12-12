@@ -7,22 +7,28 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/event", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/events", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
 public class EventsController {
 
     final EventsServiceImpl eventsService;
 
-    @GetMapping
-    public ResponseEntity<EventDto> getEventDto(@RequestParam final Long eventId,
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDto> getEventDto(@PathVariable final Long eventId,
                                                 final Authentication authentication) {
-        final EventDto eventDto = this.eventsService.getEventDto(eventId, authentication);
-        return ResponseEntity.ok(eventDto);
+        return ResponseEntity.ok(this.eventsService.getEventDto(eventId, authentication));
     }
 
     @PostMapping
@@ -32,32 +38,30 @@ public class EventsController {
         return ResponseEntity.ok("Successfully created an event");
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteEvent(@RequestParam final Long eventId,
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<?> deleteEvent(@PathVariable final Long eventId,
                                          final Authentication authentication) {
         this.eventsService.deleteEvent(eventId, authentication);
         return ResponseEntity.ok("Successfully deleted an event");
     }
 
-    @PutMapping
-    public ResponseEntity<?> editEvent(@RequestParam final Long eventId,
+    @PutMapping("/{eventId}")
+    public ResponseEntity<?> editEvent(@PathVariable final Long eventId,
                                        @RequestBody @Valid final EventDto eventDto,
                                        final Authentication authentication) {
         this.eventsService.editEvent(eventId, eventDto, authentication);
         return ResponseEntity.ok("Successfully edited an event");
     }
 
-    @GetMapping("/share")
-    public ResponseEntity<UUID> shareEvent(@RequestParam final Long eventId,
+    @GetMapping("/share/{eventId}")
+    public ResponseEntity<UUID> shareEvent(@PathVariable final Long eventId,
                                            final Authentication authentication) {
-        final UUID uuid = this.eventsService.shareEvent(eventId, authentication);
-        return ResponseEntity.ok(uuid);
+        return ResponseEntity.ok(this.eventsService.shareEvent(eventId, authentication));
     }
 
     @GetMapping("/share/{uuid}")
     public ResponseEntity<EventDto> getSharedEvent(@PathVariable final UUID uuid,
                                                    final Authentication authentication) {
-        final EventDto eventDto = this.eventsService.getSharedEvent(uuid, authentication);
-        return ResponseEntity.ok(eventDto);
+        return ResponseEntity.ok(this.eventsService.getSharedEvent(uuid, authentication));
     }
 }

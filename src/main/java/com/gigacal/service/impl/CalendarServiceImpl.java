@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -34,9 +33,7 @@ public class CalendarServiceImpl implements ICalendarService {
 
     @Override
     public void validateThatCalendarBelongsToUser(final Long calendarId, final Long userId) {
-        final Optional<CalendarEntity> optionalCalendarEntity = this.calendarRepository.findByIdAndUserId(calendarId, userId);
-
-        if (optionalCalendarEntity.isEmpty()) {
+        if (this.calendarRepository.findByIdAndUserId(calendarId, userId).isEmpty())  {
             LOGGER.warn("Calendar with id={} doesn't belong to user with id={}", calendarId, userId);
             throw new ForbiddenActionException("Calendar with id=" + calendarId + " doesn't belong to user with id=" + userId);
         }

@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,24 +30,18 @@ public class EventsServiceImpl implements IEventsService {
     @Override
     public EventDto getEventDto(final Long eventId, final Authentication authentication) {
         LOGGER.info("Getting an event with id={}", eventId);
-        final EventEntity eventEntity = this.getEventById(eventId);
-        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-
-        this.calendarService.validateThatCalendarBelongsToUser(eventEntity.getCalendarId(), loggedInUser.getId());
-
+        final EventEntity eventEntity = this.getEventByIdAndValidateThatCalendarBelongsToUser(eventId, authentication);
         return EventMapper.INSTANCE.map(eventEntity);
     }
 
     @Override
     public void createEvent(final EventDto eventDto, final Authentication authentication) {
         LOGGER.info("Creating an event for eventDto={}", eventDto);
-        final EventEntity eventEntity = EventMapper.INSTANCE.map(eventDto);
-        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-
-        this.calendarService.validateThatCalendarBelongsToUser(eventEntity.getCalendarId(), loggedInUser.getId());
+        final EventEntity eventEntity = this.mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(eventDto, authentication);
 
         eventEntity.setCreateDate(LocalDateTime.now());
         eventEntity.setUuid(UUID.randomUUID());
+
         LOGGER.info("Saving an eventEntity={}", eventEntity);
         this.eventRepository.save(eventEntity);
     }
@@ -54,35 +49,25 @@ public class EventsServiceImpl implements IEventsService {
     @Override
     public void deleteEvent(final Long eventId, final Authentication authentication) {
         LOGGER.info("Deleting an event with id={}", eventId);
-        final EventEntity eventEntity = this.getEventById(eventId);
-        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-
-        this.calendarService.validateThatCalendarBelongsToUser(eventEntity.getCalendarId(), loggedInUser.getId());
-
+        this.getEventByIdAndValidateThatCalendarBelongsToUser(eventId, authentication);
         this.eventRepository.deleteById(eventId);
     }
 
     @Override
     public void editEvent(final Long eventId, final EventDto eventDto, final Authentication authentication) {
         LOGGER.info("Editing an event with id={} and eventDto={}", eventId, eventDto);
-        final EventEntity newEventEntity = EventMapper.INSTANCE.map(eventDto);
-        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-
-        this.calendarService.validateThatCalendarBelongsToUser(eventDto.calendarId(), loggedInUser.getId());
+        final EventEntity newEventEntity = this.mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(eventDto, authentication);
 
         newEventEntity.setId(eventId);
         newEventEntity.setUpdateDate(LocalDateTime.now());
+
         this.eventRepository.save(newEventEntity);
     }
 
     @Override
     public UUID shareEvent(final Long eventId, final Authentication authentication) {
         LOGGER.info("Sharing an event with eventId={}", eventId);
-        final EventEntity eventEntity = this.getEventById(eventId);
-        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-
-        this.calendarService.validateThatCalendarBelongsToUser(eventEntity.getCalendarId(), loggedInUser.getId());
-
+        final EventEntity eventEntity = this.getEventByIdAndValidateThatCalendarBelongsToUser(eventId, authentication);
         return eventEntity.getUuid();
     }
 
@@ -99,13 +84,41 @@ public class EventsServiceImpl implements IEventsService {
 
     @Override
     public EventEntity getEventById(final Long eventId) {
-        return this.eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Event with id=" + eventId + " not found"));
+        final Optional<EventEntity> optionalEventEntity = this.eventRepository.findById(eventId);
+
+        if (optionalEventEntity.isEmpty()) {
+            LOGGER.warn("Event with eventId={} not found", eventId);
+            throw new EventNotFoundException("Event with uuid=" + eventId + " not found");
+        }
+
+        return optionalEventEntity.get();
     }
 
     @Override
     public EventEntity getEventByUuid(final UUID uuid) {
-        return this.eventRepository.findByUuid(uuid)
-                .orElseThrow(() -> new EventNotFoundException("Event with uuid=" + uuid + " not found"));
+        final Optional<EventEntity> optionalEventEntity = this.eventRepository.findByUuid(uuid);
+
+        if (optionalEventEntity.isEmpty()) {
+            LOGGER.warn("Event with uuid={} not found", uuid);
+            throw new EventNotFoundException("Event with uuid=" + uuid + " not found");
+        }
+
+        return optionalEventEntity.get();
+    }
+
+    private EventEntity getEventByIdAndValidateThatCalendarBelongsToUser(final Long eventId, final Authentication authentication) {
+        final EventEntity eventEntity = this.getEventById(eventId);
+        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
+        this.calendarService.validateThatCalendarBelongsToUser(eventEntity.getCalendarId(), loggedInUser.getId());
+
+        return eventEntity;
+    }
+
+    private EventEntity mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(final EventDto eventDto, final Authentication authentication) {
+        final EventEntity eventEntity = EventMapper.INSTANCE.map(eventDto);
+        final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
+        this.calendarService.validateThatCalendarBelongsToUser(eventDto.calendarId(), loggedInUser.getId());
+
+        return eventEntity;
     }
 }
