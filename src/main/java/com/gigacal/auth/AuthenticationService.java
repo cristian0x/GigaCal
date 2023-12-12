@@ -9,7 +9,7 @@ import com.gigacal.entity.UserEntity;
 import com.gigacal.enums.TokenType;
 import com.gigacal.exception.UserAlreadyExistsException;
 import com.gigacal.service.impl.JwtServiceImpl;
-import com.gigacal.mapper.RegisterRequestToUserMapper;
+import com.gigacal.mappers.RegisterRequestToUserMapper;
 import com.gigacal.service.impl.TokenServiceImpl;
 import com.gigacal.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;

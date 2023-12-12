@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,13 +18,13 @@ public class EventEntity extends AuditEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private UUID uuid;
+
     private Long calendarId;
 
     private String name;
 
     private String description;
-
-    private String link;
 
     private boolean isShared;
 
