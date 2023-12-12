@@ -59,7 +59,7 @@ public class EventsController {
         return ResponseEntity.ok(this.eventsService.shareEvent(eventId, authentication));
     }
 
-    @GetMapping("/share/{uuid}")
+    @GetMapping("/shared/{uuid}")
     public ResponseEntity<EventDto> getSharedEvent(@PathVariable final UUID uuid,
                                                    final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.getSharedEvent(uuid, authentication));
