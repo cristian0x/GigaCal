@@ -21,19 +21,18 @@ public class CalendarController {
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<?> getCalendarById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getCalendarById(@PathVariable("id") final Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(calendarService.findCalendarById(id));
     }
 
     @GetMapping(path = "/user/{userId}")
-    public ResponseEntity<?> getCalendarsByUserId(@PathVariable("userId") Long userId) {
+    public ResponseEntity<?> getCalendarsByUserId(@PathVariable("userId") final Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(calendarService.findCalendarsByUserId(userId));
     }
 
-    @GetMapping(path = "/{column}/{parameter}")
-    public ResponseEntity<?> getCalendarsByExactColumn(@PathVariable("column") String column,
-                                                       @PathVariable("parameter") String parameter) {
-        return ResponseEntity.status(HttpStatus.OK).body(calendarService.getCalendarsByExactColumn(column, parameter));
+    @GetMapping(path = "/name/{name}")
+    public ResponseEntity<?> getCalendarsByExactColumn(@PathVariable("name") final String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(calendarService.findCalendarsByName(name));
     }
 
     @PostMapping
@@ -43,14 +42,14 @@ public class CalendarController {
     }
 
     @DeleteMapping(path = "{calendarId}")
-    public ResponseEntity<?> deleteCalendar(@PathVariable("calendarId") Long calendarId) {
+    public ResponseEntity<?> deleteCalendar(@PathVariable("calendarId") final Long calendarId) {
         calendarService.deleteCalendar(calendarId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Calendar deleted successfully.");
     }
 
     @PutMapping(path = "{calendarId}")
-    public ResponseEntity<?> updateCalendar(@PathVariable("calendarId") Long calendarId,
-                                            @RequestBody CalendarEntity calendar) {
+    public ResponseEntity<?> updateCalendar(@PathVariable("calendarId") final Long calendarId,
+                                            @RequestBody final CalendarEntity calendar) {
         calendarService.updateCalendar(calendarId, calendar);
         return ResponseEntity.status(HttpStatus.OK).body("Calendar updated successfully.");
     }
