@@ -10,6 +10,8 @@ public interface ICalendarService {
 
     void createCalendar(CalendarEntity calendarEntity);
 
+    void validateThatCalendarBelongsToUser(Long calendarId, Long userId);
+
     CalendarEntity findCalendarById(Long calendarId);
 
     List<CalendarEntity> findCalendarsByUserId(Long userId);
