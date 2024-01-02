@@ -1,5 +1,6 @@
 package com.gigacal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gigacal.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -33,6 +34,7 @@ public class UserEntity extends AuditEntity implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<TokenEntity> tokens;
 
     @Override

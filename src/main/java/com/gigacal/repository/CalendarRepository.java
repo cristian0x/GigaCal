@@ -13,6 +13,9 @@ public interface CalendarRepository extends JpaRepository<CalendarEntity, Long> 
 
     Optional<CalendarEntity> findByIdAndUserId(Long calendarId, Long userId);
 
+    @Query("SELECT calendar FROM CalendarEntity calendar WHERE calendar.name = ?1 AND calendar.user.id = ?2")
+    Optional<CalendarEntity> findByCalendarNameAndUserId(String name, Long userId);
+
     @Query("SELECT calendar FROM CalendarEntity calendar WHERE calendar.user.id = ?1")
     Optional<List<CalendarEntity>> findCalendarsByUserId(final Long userId);
 

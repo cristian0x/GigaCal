@@ -8,7 +8,7 @@ public class CalendarException extends RuntimeException {
 
     public static class IncorrectDataProvided extends CalendarException {
         public IncorrectDataProvided(){
-            super("incorrect data");
+            super("incorrect data provided");
         }
     }
 }
