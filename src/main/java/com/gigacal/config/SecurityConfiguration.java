@@ -33,6 +33,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/auth/**")
                                 .permitAll()
+                                .requestMatchers("/swagger-ui").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/swagger-resources/**").permitAll()
                                 .requestMatchers("/**").hasAuthority(Role.USER.getPermission())
                                 .anyRequest()
                                 .authenticated()

@@ -1,8 +1,6 @@
 package com.gigacal.exception.advice;
 
-import com.gigacal.exception.EventNotFoundException;
-import com.gigacal.exception.ForbiddenActionException;
-import com.gigacal.exception.UserAlreadyExistsException;
+import com.gigacal.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -39,6 +37,12 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ResponseEntity<?> handle403Exception(final RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(value = {CalendarException.IncorrectDataProvided.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handle400Exception(final RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
     @Override
