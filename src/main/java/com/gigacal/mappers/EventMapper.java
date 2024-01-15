@@ -1,6 +1,6 @@
 package com.gigacal.mappers;
 
-import com.gigacal.dto.EventDto;
+import com.gigacal.dto.EventDTO;
 import com.gigacal.entity.EventEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,7 +12,7 @@ public interface EventMapper {
 
     EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
-    EventEntity map(EventDto eventDto);
+    EventEntity map(EventDTO eventDto);
 
-    EventDto map(EventEntity eventEntity);
+    EventDTO map(EventEntity eventEntity);
 }

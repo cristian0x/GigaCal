@@ -1,6 +1,6 @@
 package com.gigacal.service.impl;
 
-import com.gigacal.dto.EventDto;
+import com.gigacal.dto.EventDTO;
 import com.gigacal.entity.EventEntity;
 import com.gigacal.entity.UserEntity;
 import com.gigacal.exception.EventNotFoundException;
@@ -28,14 +28,14 @@ public class EventsServiceImpl implements IEventsService {
     private final CalendarServiceImpl calendarService;
 
     @Override
-    public EventDto getEventDto(final Long eventId, final Authentication authentication) {
+    public EventDTO getEventDto(final Long eventId, final Authentication authentication) {
         LOGGER.info("Getting an event with id={}", eventId);
         final EventEntity eventEntity = this.getEventByIdAndValidateThatCalendarBelongsToUser(eventId, authentication);
         return EventMapper.INSTANCE.map(eventEntity);
     }
 
     @Override
-    public void createEvent(final EventDto eventDto, final Authentication authentication) {
+    public void createEvent(final EventDTO eventDto, final Authentication authentication) {
         LOGGER.info("Creating an event for eventDto={}", eventDto);
         final EventEntity eventEntity = this.mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(eventDto, authentication);
 
@@ -54,7 +54,7 @@ public class EventsServiceImpl implements IEventsService {
     }
 
     @Override
-    public void editEvent(final Long eventId, final EventDto eventDto, final Authentication authentication) {
+    public void editEvent(final Long eventId, final EventDTO eventDto, final Authentication authentication) {
         LOGGER.info("Editing an event with id={} and eventDto={}", eventId, eventDto);
         final EventEntity newEventEntity = this.mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(eventDto, authentication);
 
@@ -72,7 +72,7 @@ public class EventsServiceImpl implements IEventsService {
     }
 
     @Override
-    public EventDto getSharedEvent(final UUID uuid, final Authentication authentication) {
+    public EventDTO getSharedEvent(final UUID uuid, final Authentication authentication) {
         LOGGER.info("Getting an event with UUID={}", uuid);
         final EventEntity eventEntity = this.getEventByUuid(uuid);
         final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
@@ -114,7 +114,7 @@ public class EventsServiceImpl implements IEventsService {
         return eventEntity;
     }
 
-    private EventEntity mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(final EventDto eventDto, final Authentication authentication) {
+    private EventEntity mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(final EventDTO eventDto, final Authentication authentication) {
         final EventEntity eventEntity = EventMapper.INSTANCE.map(eventDto);
         final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
         this.calendarService.validateThatCalendarBelongsToUser(eventDto.calendarId(), loggedInUser.getId());

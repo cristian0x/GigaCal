@@ -30,11 +30,14 @@ public class EventEntity extends AuditEntity {
 
     private boolean isCyclic;
 
+    private String days;
+
     private LocalDate startDate;
 
     private LocalDate endDate;
 
     private LocalTime time;
 
-    private int duration;
+    private LocalTime duration;
+
 }

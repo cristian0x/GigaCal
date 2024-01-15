@@ -17,6 +17,7 @@ public class SettingEntity extends AuditEntity {
 
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
     private SettingType type;
 
     private String value;

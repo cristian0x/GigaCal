@@ -1,6 +1,6 @@
 package com.gigacal.controller;
 
-import com.gigacal.dto.EventDto;
+import com.gigacal.dto.EventDTO;
 import com.gigacal.service.impl.EventsServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,14 +30,14 @@ public class EventsController {
 
     @Operation(summary = "Get event by id")
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventDto> getEventDto(@PathVariable final Long eventId,
+    public ResponseEntity<EventDTO> getEventDto(@PathVariable final Long eventId,
                                                 final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.getEventDto(eventId, authentication));
     }
 
     @Operation(summary = "Create new event")
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody @Valid final EventDto eventDto,
+    public ResponseEntity<?> createEvent(@RequestBody @Valid final EventDTO eventDto,
                                          final Authentication authentication) {
         this.eventsService.createEvent(eventDto, authentication);
         return ResponseEntity.ok("Successfully created an event");
@@ -54,7 +54,7 @@ public class EventsController {
     @Operation(summary = "Update event")
     @PutMapping("/{eventId}")
     public ResponseEntity<?> editEvent(@PathVariable final Long eventId,
-                                       @RequestBody @Valid final EventDto eventDto,
+                                       @RequestBody @Valid final EventDTO eventDto,
                                        final Authentication authentication) {
         this.eventsService.editEvent(eventId, eventDto, authentication);
         return ResponseEntity.ok("Successfully edited an event");
@@ -69,7 +69,7 @@ public class EventsController {
 
     @Operation(summary = "Get shared event by uuid")
     @GetMapping("/shared/{uuid}")
-    public ResponseEntity<EventDto> getSharedEvent(@PathVariable final UUID uuid,
+    public ResponseEntity<EventDTO> getSharedEvent(@PathVariable final UUID uuid,
                                                    final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.getSharedEvent(uuid, authentication));
     }
