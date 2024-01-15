@@ -1,0 +1,60 @@
+/users:
+-----
+GET:
+data (id or login)
+-----
+POST:
+login (login, password)
+register (login, password, confirmPassword)
+-----
+PUT:
+password (id or login, oldPassword, newPassword, confirmPassword)
+-----
+DELETE:
+remove (id or login) 
+
+----- ----- -----
+
+/calendars:
+-----
+GET:
+get or show (id)
+list (userId)
+-----
+POST:
+add (all fields from entity, without id and dates)
+-----
+PUT:
+update (all fields from entity, without dates)
+-----
+DELETE:
+remove (id)
+
+----- ----- -----
+
+/events:
+-----
+GET:
+get or show (id)
+list (userId or calendarId)
+share (id)
+-----
+POST:
+add (all fields from entity, without id and dates)
+-----
+PUT:
+update (all fields from entity, without dates)
+-----
+DELETE:
+remove (id)
+
+----- ----- -----
+
+/settings:
+-----
+GET:
+get (id or userId or type)
+list (UserId)
+-----
+PUT:
+update (all fields from entity, without dates)
