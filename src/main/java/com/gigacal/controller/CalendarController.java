@@ -1,5 +1,6 @@
 package com.gigacal.controller;
 
+import com.gigacal.dto.CalendarDTO;
 import com.gigacal.entity.CalendarEntity;
 import com.gigacal.service.impl.CalendarServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,10 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Calendar", description = "Calendar API")
 @RestController
 @RequestMapping(path = "/calendars", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
+@CrossOrigin
 public class CalendarController {
 
     private final CalendarServiceImpl calendarService;
@@ -27,10 +31,9 @@ public class CalendarController {
     }
 
     @Operation(summary = "Get all calendars by user id")
-    @GetMapping(path = "/user/{userId}")
-    public ResponseEntity<?> getCalendarsByUserId(@PathVariable("userId") final Long userId,
-                                                  final Authentication authentication) {
-        return ResponseEntity.status(HttpStatus.OK).body(calendarService.findCalendarsByUserId(userId, authentication));
+    @GetMapping
+    public ResponseEntity<List<CalendarDTO>> getCalendarsForUser(final Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.calendarService.findCalendarsForUser(authentication));
     }
 
     @Operation(summary = "Get calendars by name")
@@ -42,10 +45,9 @@ public class CalendarController {
 
     @Operation(summary = "Create calendar")
     @PostMapping
-    public ResponseEntity<?> createCalendar(@RequestBody final CalendarEntity calendarEntity,
-                                            final Authentication authentication) {
-        calendarService.createCalendar(calendarEntity, authentication);
-        return ResponseEntity.status(HttpStatus.OK).body("Calendar created successfully.");
+    public ResponseEntity<CalendarDTO> createCalendar(@RequestBody final CalendarDTO calendarDTO,
+                                                      final Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK).body(calendarService.createCalendar(calendarDTO, authentication));
     }
 
     @Operation(summary = "Delete calendar")
@@ -57,11 +59,9 @@ public class CalendarController {
     }
 
     @Operation(summary = "Update calendar")
-    @PutMapping(path = "{calendarId}")
-    public ResponseEntity<?> updateCalendar(@PathVariable("calendarId") final Long calendarId,
-                                            @RequestBody final CalendarEntity calendar,
-                                            final Authentication authentication) {
-        calendarService.updateCalendar(calendarId, calendar, authentication);
-        return ResponseEntity.status(HttpStatus.OK).body("Calendar updated successfully.");
+    @PutMapping
+    public ResponseEntity<CalendarDTO> updateCalendar(@RequestBody final CalendarDTO calendar,
+                                                      final Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.calendarService.updateCalendar(calendar, authentication));
     }
 }

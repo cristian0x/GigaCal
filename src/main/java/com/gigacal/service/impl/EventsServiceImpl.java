@@ -1,6 +1,7 @@
 package com.gigacal.service.impl;
 
 import com.gigacal.dto.EventDto;
+import com.gigacal.entity.CalendarEntity;
 import com.gigacal.entity.EventEntity;
 import com.gigacal.entity.UserEntity;
 import com.gigacal.exception.EventNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +37,14 @@ public class EventsServiceImpl implements IEventsService {
     }
 
     @Override
-    public void createEvent(final EventDto eventDto, final Authentication authentication) {
+    public List<EventDto> getAllUserEvents(final Authentication authentication) {
+        final List<CalendarEntity> calendarEntities = this.calendarService.findAllUserCalendars(authentication);
+        final List<EventEntity> eventEntities = this.eventRepository.findAllByCalendarIdIn(calendarEntities.stream().map(CalendarEntity::getId).toList());
+        return eventEntities.stream().map(EventMapper.INSTANCE::map).toList();
+    }
+
+    @Override
+    public EventDto createEvent(final EventDto eventDto, final Authentication authentication) {
         LOGGER.info("Creating an event for eventDto={}", eventDto);
         final EventEntity eventEntity = this.mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(eventDto, authentication);
 
@@ -43,7 +52,7 @@ public class EventsServiceImpl implements IEventsService {
         eventEntity.setUuid(UUID.randomUUID());
 
         LOGGER.info("Saving an eventEntity={}", eventEntity);
-        this.eventRepository.save(eventEntity);
+        return EventMapper.INSTANCE.map(this.eventRepository.save(eventEntity));
     }
 
     @Override
@@ -54,14 +63,12 @@ public class EventsServiceImpl implements IEventsService {
     }
 
     @Override
-    public void editEvent(final Long eventId, final EventDto eventDto, final Authentication authentication) {
-        LOGGER.info("Editing an event with id={} and eventDto={}", eventId, eventDto);
+    public EventDto editEvent(final EventDto eventDto, final Authentication authentication) {
+        LOGGER.info("Editing an event with id={} and eventDto={}", eventDto.id(), eventDto);
         final EventEntity newEventEntity = this.mapEventDtoToEntityAndValidateThatCalendarBelongsToUser(eventDto, authentication);
 
-        newEventEntity.setId(eventId);
         newEventEntity.setUpdateDate(LocalDateTime.now());
-
-        this.eventRepository.save(newEventEntity);
+        return EventMapper.INSTANCE.map(this.eventRepository.save(newEventEntity));
     }
 
     @Override
@@ -88,7 +95,7 @@ public class EventsServiceImpl implements IEventsService {
 
         if (optionalEventEntity.isEmpty()) {
             LOGGER.warn("Event with eventId={} not found", eventId);
-            throw new EventNotFoundException("Event with uuid=" + eventId + " not found");
+            throw new EventNotFoundException("Event with id=" + eventId + " not found");
         }
 
         return optionalEventEntity.get();

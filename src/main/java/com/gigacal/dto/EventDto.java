@@ -4,16 +4,23 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.LocalTime;
+import java.util.List;
 
 public record EventDto(
-    @Nonnull Long calendarId,
-    @Nonnull String name,
-    @Nullable String description,
-    @Nonnull boolean isCyclic,
-    @Nonnull LocalDate startDate,
-    @Nullable LocalDate endDate,
-    @Nonnull @JsonFormat(pattern="HH:mm:ss") LocalTime time,
-    @Nonnull int duration
+        @Nullable Long id,
+        @Nonnull Long calendarId,
+        @Nonnull String title,
+        @Nonnull Boolean isCyclic,
+        @Nonnull Boolean allDay,
+        @Nullable Instant start,
+        @Nullable Instant end,
+        @Nullable @JsonFormat(pattern="HH:mm:ss") LocalTime startTime,
+        @Nullable @JsonFormat(pattern="HH:mm:ss") LocalTime endTime,
+        @Nullable Instant startRecur,
+        @Nullable Instant endRecur,
+        @Nullable List<String> daysOfWeek,
+        @Nullable String urlStr,
+        @Nullable String description
 ){}

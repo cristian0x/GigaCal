@@ -6,25 +6,24 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Events", description = "Events API")
 @RestController
 @RequestMapping(path = "/events", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
+@CrossOrigin("*")
 public class EventsController {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(EventsController.class);
 
     final EventsServiceImpl eventsService;
 
@@ -37,10 +36,15 @@ public class EventsController {
 
     @Operation(summary = "Create new event")
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody @Valid final EventDto eventDto,
-                                         final Authentication authentication) {
-        this.eventsService.createEvent(eventDto, authentication);
-        return ResponseEntity.ok("Successfully created an event");
+    public ResponseEntity<EventDto> createEvent(@RequestBody @Valid final EventDto eventDto,
+                                                final Authentication authentication) {
+        LOGGER.info("Creating event for eventDto={}", eventDto);
+        return ResponseEntity.ok(this.eventsService.createEvent(eventDto, authentication));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EventDto>> getAllUserEvents(final Authentication authentication) {
+        return ResponseEntity.ok(this.eventsService.getAllUserEvents(authentication));
     }
 
     @Operation(summary = "Delete event by id")
@@ -52,12 +56,10 @@ public class EventsController {
     }
 
     @Operation(summary = "Update event")
-    @PutMapping("/{eventId}")
-    public ResponseEntity<?> editEvent(@PathVariable final Long eventId,
-                                       @RequestBody @Valid final EventDto eventDto,
+    @PutMapping
+    public ResponseEntity<EventDto> editEvent(@RequestBody @Valid final EventDto eventDto,
                                        final Authentication authentication) {
-        this.eventsService.editEvent(eventId, eventDto, authentication);
-        return ResponseEntity.ok("Successfully edited an event");
+        return ResponseEntity.ok(this.eventsService.editEvent(eventDto, authentication));
     }
 
     @Operation(summary = "Share event by id")
