@@ -18,6 +18,9 @@ public class RegisterRequestDTO {
     @Size(min = 8, message = "Username too short")
     private String username;
 
+    @Pattern(regexp="\\d{9}", message = "Phone number invalid")
+    private String phoneNumber;
+
     @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z]).{8,20}$", message = "Password invalid")
     private String password;
 }

@@ -1,6 +1,6 @@
 package com.gigacal.controller;
 
-import com.gigacal.dto.EventDto;
+import com.gigacal.dto.EventDTO;
 import com.gigacal.service.impl.EventsServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,21 +29,21 @@ public class EventsController {
 
     @Operation(summary = "Get event by id")
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventDto> getEventDto(@PathVariable final Long eventId,
+    public ResponseEntity<EventDTO> getEventDto(@PathVariable final Long eventId,
                                                 final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.getEventDto(eventId, authentication));
     }
 
     @Operation(summary = "Create new event")
     @PostMapping
-    public ResponseEntity<EventDto> createEvent(@RequestBody @Valid final EventDto eventDto,
+    public ResponseEntity<EventDTO> createEvent(@RequestBody @Valid final EventDTO eventDto,
                                                 final Authentication authentication) {
         LOGGER.info("Creating event for eventDto={}", eventDto);
         return ResponseEntity.ok(this.eventsService.createEvent(eventDto, authentication));
     }
 
     @GetMapping
-    public ResponseEntity<List<EventDto>> getAllUserEvents(final Authentication authentication) {
+    public ResponseEntity<List<EventDTO>> getAllUserEvents(final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.getAllUserEvents(authentication));
     }
 
@@ -57,8 +57,8 @@ public class EventsController {
 
     @Operation(summary = "Update event")
     @PutMapping
-    public ResponseEntity<EventDto> editEvent(@RequestBody @Valid final EventDto eventDto,
-                                       final Authentication authentication) {
+    public ResponseEntity<EventDTO> editEvent(@RequestBody @Valid final EventDTO eventDto,
+                                              final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.editEvent(eventDto, authentication));
     }
 
@@ -71,7 +71,7 @@ public class EventsController {
 
     @Operation(summary = "Get shared event by uuid")
     @GetMapping("/shared/{uuid}")
-    public ResponseEntity<EventDto> getSharedEvent(@PathVariable final UUID uuid,
+    public ResponseEntity<EventDTO> getSharedEvent(@PathVariable final UUID uuid,
                                                    final Authentication authentication) {
         return ResponseEntity.ok(this.eventsService.getSharedEvent(uuid, authentication));
     }

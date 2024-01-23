@@ -1,4 +1,4 @@
-package com.gigacal.mock;
+package com.gigacal.notifications;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 public class SmsPlanetResponse {
+
     private static final Gson gson = new Gson();
 
     private final String body;
@@ -32,36 +33,8 @@ public class SmsPlanetResponse {
         succeeded = message != null;
     }
 
-    public boolean result() {
-        return message.containsKey("result");
-    }
-
     public String getMessageId() {
         return succeeded ? (String) message.getOrDefault("messageId", "0") : null;
-    }
-
-    public String getMessage() {
-        return succeeded ? (String) message.getOrDefault("message", null) : null;
-    }
-
-    public int balance() {
-        return succeeded ? ((Double) message.getOrDefault("balance", (double) -1)).intValue() : -1;
-    }
-
-    public int count() {
-        return succeeded ? ((Double) message.getOrDefault("number", (double) -1)).intValue() : -1;
-    }
-
-    public String shortUrl() {
-        return succeeded ? (String) message.getOrDefault("shortUrl", null) : null;
-    }
-
-    public String[] senderFields() {
-        if  (succeeded) {
-            String fields = (String) message.getOrDefault("senderFields",null);
-            return fields != null ? fields.split(",") : null;
-        }
-        return null;
     }
 
     public int getErrorCode() {
