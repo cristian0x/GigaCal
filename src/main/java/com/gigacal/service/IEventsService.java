@@ -1,24 +1,27 @@
 package com.gigacal.service;
 
-import com.gigacal.dto.EventDTO;
+import com.gigacal.dto.EventDto;
 import com.gigacal.entity.EventEntity;
 import org.springframework.security.core.Authentication;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IEventsService {
 
-    EventDTO getEventDto(Long eventId, Authentication authentication);
+    EventDto getEventDto(Long eventId, Authentication authentication);
 
-    void createEvent(EventDTO eventDto, Authentication authentication);
+    List<EventDto> getAllUserEvents(Authentication authentication);
+
+    EventDto createEvent(EventDto eventDto, Authentication authentication);
 
     void deleteEvent(Long eventId, Authentication authentication);
 
-    void editEvent(Long eventId, EventDTO eventDto, Authentication authentication);
+    EventDto editEvent(EventDto eventDto, Authentication authentication);
 
     UUID shareEvent(Long eventId, Authentication authentication);
 
-    EventDTO getSharedEvent(UUID uuid, Authentication authentication);
+    EventDto getSharedEvent(UUID uuid, Authentication authentication);
 
     EventEntity getEventById(Long eventId);
 
