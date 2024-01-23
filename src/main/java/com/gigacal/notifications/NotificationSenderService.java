@@ -59,34 +59,34 @@ public class NotificationSenderService {
     private final String EMAIL_SUBJECT = "GigaCal - reminder";
     private final String EMAIL_HTML_PATTERN = loadHtmlContentFromFile();
 
-    @Scheduled(cron = "0 */1 * ? * *")
-    public void checkEvents() {
-        List<Long> usersWithNotificationsEnabled = settingRepository.findAllByType(NOTIFICATION_ENABLED).stream()
-                .filter(s -> s.getValue().equals(Boolean.TRUE.toString()))
-                .map(SettingEntity::getUserId)
-                .toList();
-        List<EventEntity> events = eventRepository.findAllByUsers(usersWithNotificationsEnabled);
-        List<EventEntity> cyclicEvents = events.stream().filter(EventEntity::isCyclic).toList();
-        List<EventEntity> oneTimeEvents = events.stream().filter(e -> !e.isCyclic()).toList();
-
-        for (EventEntity event : cyclicEvents) {
-            LocalDate startDate = event.getStartDate();
-            LocalDate endDate = event.getEndDate();
-            LocalTime time = event.getTime();
-            if (eventDateIsBetween(startDate, endDate) && isMatchingDayOfWeek(event.getDays())
-                    && time.minusMinutes(15).equals(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))) {
-                sendNotification(event);
-            }
-        }
-
-        for (EventEntity event : oneTimeEvents) {
-            LocalDateTime dateTime = LocalDateTime.of(event.getStartDate(), event.getTime());
-            if (dateTime.minusMinutes(15).isEqual(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
-                sendNotification(event);
-            }
-        }
-
-    }
+//    @Scheduled(cron = "0 */1 * ? * *")
+//    public void checkEvents() {
+//        List<Long> usersWithNotificationsEnabled = settingRepository.findAllByType(NOTIFICATION_ENABLED).stream()
+//                .filter(s -> s.getValue().equals(Boolean.TRUE.toString()))
+//                .map(SettingEntity::getUserId)
+//                .toList();
+//        List<EventEntity> events = eventRepository.findAllByUsers(usersWithNotificationsEnabled);
+//        List<EventEntity> cyclicEvents = events.stream().filter(EventEntity::getIsCyclic).toList();
+//        List<EventEntity> oneTimeEvents = events.stream().filter(e -> !e.getIsCyclic()).toList();
+//
+//        for (EventEntity event : cyclicEvents) {
+//            LocalDate startDate = event.getStartDate();
+//            LocalDate endDate = event.getEndDate();
+//            LocalTime time = event.getTime();
+//            if (eventDateIsBetween(startDate, endDate) && isMatchingDayOfWeek(event.getDays())
+//                    && time.minusMinutes(15).equals(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+//                sendNotification(event);
+//            }
+//        }
+//
+//        for (EventEntity event : oneTimeEvents) {
+//            LocalDateTime dateTime = LocalDateTime.of(event.getStartDate(), event.getTime());
+//            if (dateTime.minusMinutes(15).isEqual(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
+//                sendNotification(event);
+//            }
+//        }
+//
+//    }
 
     private boolean eventDateIsBetween(LocalDate min, LocalDate max) {
         LocalDate eventDate = LocalDateTime.now().plusMinutes(15).toLocalDate();
@@ -98,24 +98,24 @@ public class NotificationSenderService {
         return days.charAt(dayOfWeek.getValue() - 1) == '1';
     }
 
-    private void sendNotification(EventEntity event) {
-        Long userId = calendarRepository.findById(event.getCalendarId()).orElseThrow().getUser().getId();
-        String channel = settingRepository.findByUserIdAndType(userId, NOTIFICATION_CHANNEL).orElseThrow().getValue();
-        UserEntity user = userRepository.findById(userId).orElseThrow();
-
-        String eventName = event.getName();
-        String eventDate = LocalDateTime.now().plusMinutes(15).format(formatter);
-        String eventStart = event.getTime().toString();
-        String eventEnd = event.getTime().plusHours(event.getDuration().getHour()).plusMinutes(event.getDuration().getMinute()).toString();
-
-        if (channel.equals(SMS.toString())) {
-            String message = SMS_MESSAGE_INTRO + eventName + " on " + eventDate + " at " + eventStart + "-" + eventEnd;
-            sendSms(user.getPhoneNumber(), message);
-        }
-        if (channel.equals(EMAIL.toString())) {
-            sendEmail(user.getEmail(), eventName, eventDate, eventStart, eventEnd);
-        }
-    }
+//    private void sendNotification(EventEntity event) {
+//        Long userId = calendarRepository.findById(event.getCalendarId()).orElseThrow().getUser().getId();
+//        String channel = settingRepository.findByUserIdAndType(userId, NOTIFICATION_CHANNEL).orElseThrow().getValue();
+//        UserEntity user = userRepository.findById(userId).orElseThrow();
+//
+//        String eventName = event.getName();
+//        String eventDate = LocalDateTime.now().plusMinutes(15).format(formatter);
+//        String eventStart = event.getTime().toString();
+//        String eventEnd = event.getTime().plusHours(event.getDuration().getHour()).plusMinutes(event.getDuration().getMinute()).toString();
+//
+//        if (channel.equals(SMS.toString())) {
+//            String message = SMS_MESSAGE_INTRO + eventName + " on " + eventDate + " at " + eventStart + "-" + eventEnd;
+//            sendSms(user.getPhoneNumber(), message);
+//        }
+//        if (channel.equals(EMAIL.toString())) {
+//            sendEmail(user.getEmail(), eventName, eventDate, eventStart, eventEnd);
+//        }
+//    }
 
     private void sendSms(String phoneNumber, String message) {
         SmsPlanetRequest request = SmsPlanetRequest.sendSMS(

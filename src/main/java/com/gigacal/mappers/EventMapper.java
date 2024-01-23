@@ -1,6 +1,6 @@
 package com.gigacal.mappers;
 
-import com.gigacal.dto.EventDto;
+import com.gigacal.dto.EventDTO;
 import com.gigacal.entity.EventEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,9 +15,9 @@ public interface EventMapper {
 
     @Mapping(source = "start", target = "startStr")
     @Mapping(source = "end", target = "endStr")
-    EventEntity map(EventDto eventDto);
+    EventEntity map(EventDTO eventDto);
 
     @Mapping(source = "startStr", target = "start")
     @Mapping(source = "endStr", target = "end")
-    EventDto map(EventEntity eventEntity);
+    EventDTO map(EventEntity eventEntity);
 }

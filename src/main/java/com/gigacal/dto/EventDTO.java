@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.util.List;
 
-public record EventDto(
+public record EventDTO(
         @Nullable Long id,
         @Nonnull Long calendarId,
         @Nonnull String title,
