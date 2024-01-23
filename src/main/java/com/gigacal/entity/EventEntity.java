@@ -1,11 +1,14 @@
 package com.gigacal.entity;
 
+import com.gigacal.entity.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -22,19 +25,30 @@ public class EventEntity extends AuditEntity {
 
     private Long calendarId;
 
-    private String name;
-
-    private String description;
+    private String title;
 
     private boolean isShared;
 
-    private boolean isCyclic;
+    private Boolean isCyclic;
 
-    private LocalDate startDate;
+    private boolean allDay;
 
-    private LocalDate endDate;
+    private Instant startStr;
 
-    private LocalTime time;
+    private Instant endStr;
 
-    private int duration;
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
+    private Instant startRecur;
+
+    private Instant endRecur;
+
+    @Convert(converter = StringListConverter.class)
+    private List<String> daysOfWeek = new ArrayList<>();
+
+    private String urlStr;
+
+    private String description;
 }
