@@ -1,9 +1,11 @@
 package com.gigacal.service.impl;
 
+import com.gigacal.dto.CalendarDTO;
 import com.gigacal.entity.CalendarEntity;
 import com.gigacal.entity.UserEntity;
 import com.gigacal.exception.CalendarException;
 import com.gigacal.exception.ForbiddenActionException;
+import com.gigacal.mappers.CalendarMapper;
 import com.gigacal.repository.CalendarRepository;
 import com.gigacal.service.ICalendarService;
 import jakarta.persistence.NoResultException;
@@ -13,11 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
+
+import static java.util.Collections.emptyList;
 
 @Service
 @AllArgsConstructor
@@ -26,13 +28,15 @@ public class CalendarServiceImpl implements ICalendarService {
     private final Logger LOGGER = LoggerFactory.getLogger(CalendarServiceImpl.class);
 
     private final CalendarRepository calendarRepository;
-
     private final UserServiceImpl userService;
 
     @Override
-    public void createCalendar(final CalendarEntity calendarEntity, final Authentication authentication) {
+    public CalendarDTO createCalendar(final CalendarDTO calendarDTO, final Authentication authentication) {
+        final UserEntity loggedUser = this.userService.getUserFromAuthentication(authentication);
+        final CalendarEntity calendarEntity = CalendarMapper.INSTANCE.map(calendarDTO);
+        calendarEntity.setUser(loggedUser);
         calendarEntity.setCreateDate(LocalDateTime.now());
-        calendarRepository.save(calendarEntity);
+        return CalendarMapper.INSTANCE.map(this.calendarRepository.save(calendarEntity));
     }
 
     @Override
@@ -45,13 +49,10 @@ public class CalendarServiceImpl implements ICalendarService {
     }
 
     @Override
-    public List<CalendarEntity> findCalendarsByUserId(final Long userId, final Authentication authentication) {
+    public List<CalendarDTO> findCalendarsForUser(final Authentication authentication) {
         final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-        if (!Objects.equals(loggedInUser.getId(), userId)) {
-            throw new ForbiddenActionException("Provided user is not an authorized user");
-        }
-        return calendarRepository.findCalendarsByUserId(userId).orElseThrow(() ->
-                new NoResultException("calendars for user id " + userId + " not found"));
+        final List<CalendarEntity> calendarEntities = calendarRepository.findCalendarsByUserId(loggedInUser.getId()).orElse(emptyList());
+        return calendarEntities.stream().map(CalendarMapper.INSTANCE::map).toList();
     }
 
     @Override
@@ -76,27 +77,28 @@ public class CalendarServiceImpl implements ICalendarService {
 
     @Override
     @Transactional
-    public void updateCalendar(final Long calendarId, final CalendarEntity calendar, final Authentication authentication) {
+    public CalendarDTO updateCalendar(final CalendarDTO calendar, final Authentication authentication) {
         final UserEntity loggedInUser = this.userService.getUserFromAuthentication(authentication);
-        validateThatCalendarBelongsToUser(calendarId, loggedInUser.getId());
+        validateThatCalendarBelongsToUser(calendar.id(), loggedInUser.getId());
 
-        CalendarEntity calendarToUpdate = calendarRepository.findById(calendarId).orElseThrow(() ->
-                new NoResultException("calendar with id " + calendarId + " not found"));
+        CalendarEntity calendarToUpdate = calendarRepository.findById(calendar.id()).orElseThrow(() ->
+                new NoResultException("calendar with id " + calendar.id() + " not found"));
 
-        if (!calendar.getName().isEmpty()) {
-            calendarToUpdate.setName(calendar.getName());
+        if (!calendar.name().isEmpty()) {
+            calendarToUpdate.setName(calendar.name());
         }
         else {
             throw new CalendarException.IncorrectDataProvided();
         }
-        if (!ObjectUtils.isEmpty(calendar.getUser())) {
-            calendarToUpdate.setUser(calendar.getUser());
-        }
-        else {
-            throw new CalendarException.IncorrectDataProvided();
-        }
+
         calendarToUpdate.setUpdateDate(LocalDateTime.now());
-        calendarRepository.save(calendarToUpdate);
+        return CalendarMapper.INSTANCE.map(calendarRepository.save(calendarToUpdate));
+    }
+
+    @Override
+    public List<CalendarEntity> findAllUserCalendars(final Authentication authentication) {
+        final UserEntity loggedUser = this.userService.getUserFromAuthentication(authentication);
+        return this.calendarRepository.findAllByUser(loggedUser);
     }
 
     @Override

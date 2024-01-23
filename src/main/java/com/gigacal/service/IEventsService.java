@@ -4,17 +4,20 @@ import com.gigacal.dto.EventDTO;
 import com.gigacal.entity.EventEntity;
 import org.springframework.security.core.Authentication;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IEventsService {
 
     EventDTO getEventDto(Long eventId, Authentication authentication);
 
-    void createEvent(EventDTO eventDto, Authentication authentication);
+    List<EventDTO> getAllUserEvents(Authentication authentication);
+
+    EventDTO createEvent(EventDTO eventDto, Authentication authentication);
 
     void deleteEvent(Long eventId, Authentication authentication);
 
-    void editEvent(Long eventId, EventDTO eventDto, Authentication authentication);
+    EventDTO editEvent(EventDTO eventDto, Authentication authentication);
 
     UUID shareEvent(Long eventId, Authentication authentication);
 
