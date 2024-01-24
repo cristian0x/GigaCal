@@ -39,7 +39,7 @@ public class SettingService {
         final SettingEntity savedUserSetting = this.settingRepository.findByUserId(loggedUser.getId());
         savedUserSetting.setAreNotificationsEnabled(settingDTO.areNotificationsEnabled());
         savedUserSetting.setUpdateDate(LocalDateTime.now());
-        if (Boolean.TRUE.equals(settingDTO.areNotificationsEnabled())) {
+        if (Boolean.FALSE.equals(settingDTO.areNotificationsEnabled())) {
             savedUserSetting.setNotificationChannelType(NotificationChannelType.NONE);
             savedUserSetting.setTimeBeforeEvent(0);
 
