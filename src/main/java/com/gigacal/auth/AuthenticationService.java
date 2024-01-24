@@ -10,6 +10,7 @@ import com.gigacal.enums.TokenType;
 import com.gigacal.exception.UserAlreadyExistsException;
 import com.gigacal.service.impl.JwtServiceImpl;
 import com.gigacal.mappers.RegisterRequestToUserMapper;
+import com.gigacal.service.impl.SettingService;
 import com.gigacal.service.impl.TokenServiceImpl;
 import com.gigacal.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ public class AuthenticationService {
     private final JwtServiceImpl jwtService;
     private final TokenServiceImpl tokenService;
     private final AuthenticationManager authenticationManager;
+    private final SettingService settingService;
 
     public AuthenticationResponseDTO register(final RegisterRequestDTO registerRequestDTO) {
         if (this.userService.getOptionalUserByEmail(registerRequestDTO.getEmail()).isPresent()) {
@@ -45,6 +47,7 @@ public class AuthenticationService {
         }
 
         final UserEntity user = this.userService.saveUser(RegisterRequestToUserMapper.INSTANCE.map(registerRequestDTO));
+        this.settingService.createDefaultValueForUser(user);
 
         LOGGER.info("Successfully created and saved a user={}", user);
         return generateTokensAndReturnAuthenticationResponse(user);

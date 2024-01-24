@@ -27,7 +27,7 @@ public class UserEntity extends AuditEntity implements UserDetails {
     @Email
     private String email;
 
-    @NotBlank
+//    @NotBlank
     private String phoneNumber;
 
     @NotBlank

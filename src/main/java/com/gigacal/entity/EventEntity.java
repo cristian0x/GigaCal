@@ -27,11 +27,11 @@ public class EventEntity extends AuditEntity {
 
     private String title;
 
-    private boolean isShared;
+    private Boolean isShared;
 
     private Boolean isCyclic;
 
-    private boolean allDay;
+    private Boolean allDay;
 
     private Instant startStr;
 

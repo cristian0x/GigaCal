@@ -1,6 +1,6 @@
 package com.gigacal.entity;
 
-import com.gigacal.enums.SettingType;
+import com.gigacal.enums.NotificationChannelType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,8 +17,10 @@ public class SettingEntity extends AuditEntity {
 
     private Long userId;
 
-    @Enumerated(EnumType.STRING)
-    private SettingType type;
+    private Boolean areNotificationsEnabled;
 
-    private String value;
+    @Enumerated(EnumType.STRING)
+    private NotificationChannelType notificationChannelType;
+
+    private Integer timeBeforeEvent;
 }
